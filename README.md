@@ -35,6 +35,13 @@ You can give as arguments the url and the query:
  - the url is a string
  - the query is a string or an array of string
  - the pageToProcess is a number that represent the number of page to scrap
+ - you can use this format inside the plateform
+ ```
+ {
+    "query": "vege",
+    "pageToProcess": 3
+}
+ ```
 
 The phantom will get the name, the url, the score and the number of reviews for each recipes.
 You can get the result with a curl request:
