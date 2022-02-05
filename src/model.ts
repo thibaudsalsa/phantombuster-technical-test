@@ -1,4 +1,4 @@
-import {Browser, Page, LaunchOptions} from "puppeteer-core";
+import {Browser, Page} from "puppeteer-core";
 
 ///////////////// TYPES ////////////////////////////////////////
 

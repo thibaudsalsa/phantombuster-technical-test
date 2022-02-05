@@ -3,7 +3,13 @@
 "phantombuster flags: save-folder"
 
 import Buster from "phantombuster";
-import * as puppeteer from "puppeteer-core";
+
+import puppeteer, {
+    Page,
+    Browser,
+    LaunchOptions
+} from "puppeteer-core";
+
 import {
     PhantomBrowser,
     PhantomError,
@@ -13,13 +19,14 @@ import {
 
 // default config if you don't give (or don't gice enougth) argument
 // all argument you are going to gave will override this config
-export const DEFAULT_PHANTOM_ARGUMENT: PhantomArgument = {
+const DEFAULT_PHANTOM_ARGUMENT: PhantomArgument = {
     url: "https://www.marmiton.org/recettes/recherche.aspx?aqt=",
     query: ""
 }
 
 // Config of the puppeteers browser
-export const PUPPETEERS_CONFIG: puppeteer.LaunchOptions = {
+const PUPPETEERS_CONFIG: LaunchOptions = {
+    executablePath: '/usr/bin/google-chrome',
     // This is needed to run Puppeteer in a Phantombuster container
     args: ["--no-sandbox"]
 };
@@ -31,7 +38,7 @@ export const PUPPETEERS_CONFIG: puppeteer.LaunchOptions = {
  * RETURN a promise with a PhantomBrowser object in it
  */
 async function initPhantomBrowser(): Promise<PhantomBrowser> {
-    let browser: puppeteer.Browser;
+    let browser: Browser;
 
     // create the browser
     try {
@@ -43,7 +50,7 @@ async function initPhantomBrowser(): Promise<PhantomBrowser> {
 
     // create the main page for the browser
     try {
-        const page: puppeteer.Page = await browser?.newPage();
+        const page: Page = await browser?.newPage();
         return {browser, page};
     } catch (err: PhantomError) {
         console.error("Cannot create browser page", err);
@@ -94,6 +101,7 @@ async function scrap(
 
     await phantomBrowser?.page?.goto(url);
 
+    await phantomBrowser?.page?.waitForSelector(".MRTN__sc-1gofnyi-0, .YLcEb", {timeout: 3 * 1000});
     const data: Recipe[] = await phantomBrowser?.page?.evaluate((): Recipe[] => {
         const websiteRecipes: Recipe[] = [];
 
@@ -134,7 +142,9 @@ async function runPhantom(): Promise<void> {
 
     try {
         const recipes: Recipe[] = await scrap(phantomBrowser, argument);
-        await buster.setResultObject(recipes);
+        if (recipes) {
+            await buster.setResultObject(recipes);
+        }
     } catch(err: PhantomError) {
         console.error("Error while scrapping", err);
 
