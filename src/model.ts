@@ -1,4 +1,4 @@
-import {Browser, Page, LaunchOptions} from "puppeteer";
+import {Browser, Page, LaunchOptions} from "puppeteer-core";
 
 ///////////////// TYPES ////////////////////////////////////////
 
@@ -26,25 +26,6 @@ export interface PhantomArgument {
 export interface Recipe {
     name: string;
     url: string;
-    score: number;
-    reviewsNumber: number;
+    score: string;
+    reviewsNumber: string;
 }
-
-
-
-
-
-///////////////// CONST ////////////////////////////////////////
-
-// default config if you don't give (or don't gice enougth) argument
-// all argument you are going to gave will override this config
-export const DEFAULT_PHANTOM_ARGUMENT: PhantomArgument = {
-    url: "https://www.marmiton.org/recettes/recherche.aspx?aqt=",
-    query: ""
-}
-
-// Config of the puppeteers browser
-export const PUPPETEERS_CONFIG: LaunchOptions = {
-    // This is needed to run Puppeteer in a Phantombuster container
-    args: ["--no-sandbox"]
-};

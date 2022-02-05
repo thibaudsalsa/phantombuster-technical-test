@@ -1,16 +1,28 @@
-"phantombuster command: nodejs"+
+"phantombuster command: nodejs"
 "phantombuster package: 6"
+"phantombuster flags: save-folder"
 
 import Buster from "phantombuster";
-import * as puppeteer from "puppeteer";
+import * as puppeteer from "puppeteer-core";
 import {
     PhantomBrowser,
     PhantomError,
     PhantomArgument,
-    Recipe,
-    PUPPETEERS_CONFIG,
-    DEFAULT_PHANTOM_ARGUMENT
+    Recipe
 } from "./model";
+
+// default config if you don't give (or don't gice enougth) argument
+// all argument you are going to gave will override this config
+export const DEFAULT_PHANTOM_ARGUMENT: PhantomArgument = {
+    url: "https://www.marmiton.org/recettes/recherche.aspx?aqt=",
+    query: ""
+}
+
+// Config of the puppeteers browser
+export const PUPPETEERS_CONFIG: puppeteer.LaunchOptions = {
+    // This is needed to run Puppeteer in a Phantombuster container
+    args: ["--no-sandbox"]
+};
 
 /**
  * create a PhantomBrowser and init it
@@ -81,7 +93,27 @@ async function scrap(
     const url: string = (phantomArgument?.url || "") + query;
 
     await phantomBrowser?.page?.goto(url);
-    return []; // todo delete this line
+
+    const data: Recipe[] = await phantomBrowser?.page?.evaluate((): Recipe[] => {
+        const websiteRecipes: Recipe[] = [];
+
+        const containerDiv: HTMLElement = document.getElementsByClassName("MRTN__sc-1gofnyi-0 YLcEb")[0] as HTMLElement;
+        const listOfRecipes: HTMLCollectionOf<HTMLAnchorElement> = containerDiv.getElementsByTagName("a");
+
+        for (let i: number = 0; i < listOfRecipes?.length; i++) {
+            const [name, score, reviewsNumber]: string[] = listOfRecipes[i]?.innerText?.split("\n");
+            websiteRecipes.push({
+                url: listOfRecipes[i]?.href,
+                name,
+                score,
+                reviewsNumber
+            });
+        }
+        
+        return websiteRecipes;
+    });
+
+    return data || [];
 }
 
 /**
