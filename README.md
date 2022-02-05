@@ -34,6 +34,7 @@ If no arguments are given to the phantom it will search with an empty query.
 You can give as arguments the url and the query:
  - the url is a string
  - the query is a string or an array of string
+ - the pageToProcess is a number that represent the number of page to scrap
 
 The phantom will get the name, the url, the score and the number of reviews for each recipes.
 You can get the result with a curl request:
@@ -60,7 +61,8 @@ you can install curl with ```sudo apt-get install curl```
  - The ts config is ```strict null checks``` ```no implicite any``` and ```strictFunctionTypes```
  - The documentation of the project / codebase should explicite enought (API call are explain in the readme to get the data of the phantom)
  - This project will be on a github respository
- - The user can select the number of page to process
+ - The user can select the number of page to process vyt sending a number inside the field ```pageToProcess``` in phantom arguments
+
 
  #### Mentions
   Created by Thibaud Salsa
