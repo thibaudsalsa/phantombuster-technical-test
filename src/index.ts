@@ -122,7 +122,7 @@ async function scrap(
                     url: listOfRecipes[i]?.href,
                     name,
                     score,
-                    reviewsNumber
+                    reviewsNumber: reviewsNumber?.replace("(", "")?.replace(" avis)", "") || ""
                 });
             }
             
