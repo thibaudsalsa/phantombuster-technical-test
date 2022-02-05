@@ -60,6 +60,7 @@ you can install curl with ```sudo apt-get install curl```
  - The ts config is ```strict null checks``` ```no implicite any``` and ```strictFunctionTypes```
  - The documentation of the project / codebase should explicite enought (API call are explain in the readme to get the data of the phantom)
  - This project will be on a github respository
+ - The user can select the number of page to process
 
  #### Mentions
   Created by Thibaud Salsa

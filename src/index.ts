@@ -21,7 +21,8 @@ import {
 // all argument you are going to gave will override this config
 const DEFAULT_PHANTOM_ARGUMENT: PhantomArgument = {
     url: "https://www.marmiton.org/recettes/recherche.aspx?aqt=",
-    query: ""
+    query: "",
+    pageToProcess: 1
 }
 
 // Config of the puppeteers browser
@@ -91,6 +92,7 @@ async function scrap(
     phantomBrowser: PhantomBrowser,
     phantomArgument: PhantomArgument
 ): Promise<Recipe[]> {
+    let allRecipes: Recipe[] = [];
     // handle the different format you can have (array of string or string)
     const query: string = (
         typeof phantomArgument.query === "object"
@@ -99,29 +101,40 @@ async function scrap(
     ) || "";
     const url: string = (phantomArgument?.url || "") + query;
 
-    await phantomBrowser?.page?.goto(url);
-
-    await phantomBrowser?.page?.waitForSelector(".MRTN__sc-1gofnyi-0, .YLcEb", {timeout: 3 * 1000});
-    const data: Recipe[] = await phantomBrowser?.page?.evaluate((): Recipe[] => {
-        const websiteRecipes: Recipe[] = [];
-
-        const containerDiv: HTMLElement = document.getElementsByClassName("MRTN__sc-1gofnyi-0 YLcEb")[0] as HTMLElement;
-        const listOfRecipes: HTMLCollectionOf<HTMLAnchorElement> = containerDiv.getElementsByTagName("a");
-
-        for (let i: number = 0; i < listOfRecipes?.length; i++) {
-            const [name, score, reviewsNumber]: string[] = listOfRecipes[i]?.innerText?.split("\n");
-            websiteRecipes.push({
-                url: listOfRecipes[i]?.href,
-                name,
-                score,
-                reviewsNumber
-            });
+    for (let i: number = 0; i < +phantomArgument?.pageToProcess; i++) {
+        try {
+            await phantomBrowser?.page?.goto(url + (i !== 0 ? "&page=" + (i + 1) : ""));
+            await phantomBrowser?.page?.waitForSelector(".MRTN__sc-1gofnyi-0, .YLcEb", {timeout: 3 * 1000});
+        } catch(err: PhantomError) {
+            console.log("We can't get the page");
+            return allRecipes;
         }
-        
-        return websiteRecipes;
-    });
 
-    return data || [];
+        const data: Recipe[] = await phantomBrowser?.page?.evaluate((): Recipe[] => {
+            const websiteRecipes: Recipe[] = [];
+
+            const containerDiv: HTMLElement = document.getElementsByClassName("MRTN__sc-1gofnyi-0 YLcEb")[0] as HTMLElement;
+            const listOfRecipes: HTMLCollectionOf<HTMLAnchorElement> = containerDiv.getElementsByTagName("a");
+
+            for (let i: number = 0; i < listOfRecipes?.length; i++) {
+                const [name, score, reviewsNumber]: string[] = listOfRecipes[i]?.innerText?.split("\n");
+                websiteRecipes.push({
+                    url: listOfRecipes[i]?.href,
+                    name,
+                    score,
+                    reviewsNumber
+                });
+            }
+            
+            return websiteRecipes;
+        });
+
+        if (data?.length > 0) {
+            allRecipes = allRecipes.concat(data);
+        }
+    }
+
+    return allRecipes;
 }
 
 /**

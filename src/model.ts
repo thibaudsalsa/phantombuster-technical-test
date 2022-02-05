@@ -18,8 +18,9 @@ export interface PhantomBrowser {
 // url will be the url of the website and query will be your search
 // in the end the phantom try to concat those two
 export interface PhantomArgument {
-    url ?: string;
-    query ?: PhantomQuery;
+    url: string;
+    query: PhantomQuery;
+    pageToProcess: number;
 }
 
 // data that should be returned by the scrapper
