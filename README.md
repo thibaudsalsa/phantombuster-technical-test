@@ -14,7 +14,7 @@ Technical test to be part of the company
  - You may have to use sudo
 
  - Don't forget to run ```npm install```
- - You can now code inside the ```src/``` forlder and compile your typescript by running  ```tsc``` or ```npm run tsc```.
+ - You can now code inside the ```src/``` folder and compile your typescript by running  ```tsc``` or ```npm run tsc```.
    This will make a ```dist/``` folder with an ```index.js```
 
  - Create a ```phantombuster.cson``` at the root of the repo (No I didn't upload mine on github)
@@ -61,7 +61,7 @@ curl --request GET \
      --header 'X-Phantombuster-Key-1: MY_API_KEY'
 ```
 
-The containerid is on the plateform fantom section and the api key is the same you used to ypload your phantom.
+The containerid is on the plateform fantom section and the api key is the same you used to upload your phantom.
 
 you can install curl with ```sudo apt-get install curl```
 
@@ -69,7 +69,7 @@ you can install curl with ```sudo apt-get install curl```
  - The ts config is ```strict null checks``` ```no implicite any``` and ```strictFunctionTypes```
  - The documentation of the project / codebase should explicite enought (API call are explain in the readme to get the data of the phantom)
  - This project will be on a github respository
- - The user can select the number of page to process vyt sending a number inside the field ```pageToProcess``` in phantom arguments
+ - The user can select the number of page to process by sending a number inside the field ```pageToProcess``` in phantom arguments
 
 
  #### Mentions
