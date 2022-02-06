@@ -7,13 +7,14 @@ Technical test to be part of the company
 
 ## How to turn the project on
 
- - You have to be sure that apt-get is up-to-date and so run ```sudo apt update && sudo apt upgrade```
+ - You have to be sure that apt-get is up-to-date and so run ```sudo apt-get update && sudo apt-get upgrade```
  - You have to install npm ```sudo apt-get install npm```
  - You have to install phantombuster-sdk with this ```npm install -g phantombuster-sdk;```
  - You can install typescript on global with ```npm install -g typescript```
+ - You may have to use sudo
 
  - Don't forget to run ```npm install```
- - You can now code inside the ```src/``` forlder and compile your typescript by running tsc.
+ - You can now code inside the ```src/``` forlder and compile your typescript by running  ```tsc``` or ```npm run tsc```.
    This will make a ```dist/``` folder with an ```index.js```
 
  - Create a ```phantombuster.cson``` at the root of the repo (No I didn't upload mine on github)
